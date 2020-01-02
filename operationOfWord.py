@@ -3,29 +3,32 @@ from docx import Document
 import re
 from docx.shared import Pt
 from docx.oxml.ns import qn
+from files import destFilePath, sourceFilePath
+from file_length import FileLength
 
 
 class WordHandler(object):
 
-    sourceFilePath = "E:\\myFiles\\myssz.txt"
-    destFilePath = "D:\\sgmuserprofile\\pt543f\\Desktop\\myssz.docx"
-
     regx = re.compile(r"第\d+章")
 
+    fileLength = FileLength()
+
+    # 声明Word对象
+    document = Document()
+    # 设置全局字体宋体，大小12
+    document.styles['Normal'].font.name = u'宋体'
+    document.styles['Normal'].element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
+    document.styles['Normal'].font.size = Pt(12)
+    # 设置行间距1.5倍
+    document.styles['Normal'].paragraph_format.line_spacing = 1.5
+
     def __init__(self):
-        # 声明Word对象
-        self.document = Document()
-        # 设置全局字体宋体，大小12
-        self.document.styles['Normal'].font.name = u'宋体'
-        self.document.styles['Normal'].element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
-        self.document.styles['Normal'].font.size = Pt(12)
-        # 设置行间距1.5倍
-        self.document.styles['Normal'].paragraph_format.line_spacing = 1.5
-        self.file_length = 6115223
+        self.file_length = self.fileLength(sourceFilePath)
         self.start_time = time.time()
 
-    def read_source_file(self):
-        with open(self.sourceFilePath, 'r', encoding="utf-8") as f:
+    @classmethod
+    def read_source_file(cls):
+        with open(sourceFilePath, 'r', encoding="utf-8") as f:
             while True:
                 line = f.readline()
                 if not line:
@@ -33,7 +36,6 @@ class WordHandler(object):
                 yield line
 
     def write_to_word(self):
-
         paragraph = None
         length = 0
         source_file = self.read_source_file()
@@ -62,7 +64,7 @@ class WordHandler(object):
             except StopIteration:
                 break
 
-        self.document.save(self.destFilePath)
+        self.document.save(destFilePath)
         print("\n--- 用时: %.2fs ---" % (time.time() - self.start_time))
 
     def test(self):
