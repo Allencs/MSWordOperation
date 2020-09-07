@@ -9,7 +9,7 @@ from file_length import FileLength
 
 class WordHandler(object):
 
-    regx = re.compile(r"第\d+章")
+    regx = re.compile(r"第\w+章")
 
     fileLength = FileLength()
 
@@ -36,7 +36,7 @@ class WordHandler(object):
                 yield line
 
     def write_to_word(self):
-        paragraph = None
+        paragraph = self.document.add_paragraph()  # 添加段落
         length = 0
         source_file = self.read_source_file()
         while True:
@@ -48,7 +48,6 @@ class WordHandler(object):
                     h_run = self.document.add_heading(level=1).add_run(line)
                     h_run.font.name = u'宋体'
                     h_run.element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
-
                     paragraph = self.document.add_paragraph()  # 添加段落
                 elif len(line) <= 1:
                     pass

@@ -1,6 +1,6 @@
 
 
-sourceFilePath = "E:\\myFiles\\myssz.txt"
-destFilePath = "D:\\sgmuserprofile\\pt543f\\Desktop\\myssz.docx"
+sourceFilePath = "C:\\Users\\chensheng\\Downloads\\85.txt"
+destFilePath = "C:\\Users\\chensheng\\Downloads\\tcxs-2.docx"
 
 
