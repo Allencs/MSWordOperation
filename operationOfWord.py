@@ -5,13 +5,13 @@ from docx.shared import Pt
 from docx.oxml.ns import qn
 from files import destFilePath, sourceFilePath
 from file_length import FileLength
+import chardet
 
 
 class WordHandler(object):
+    regx = re.compile(r".*第\w+章.*")
 
-    regx = re.compile(r"第\w+章")
-
-    fileLength = FileLength()
+    fileEncoding = ""
 
     # 声明Word对象
     document = Document()
@@ -23,17 +23,26 @@ class WordHandler(object):
     document.styles['Normal'].paragraph_format.line_spacing = 1.5
 
     def __init__(self):
-        self.file_length = self.fileLength(sourceFilePath)
+        self.fileEncoding = self.charDetect(sourceFilePath)
+        if self.fileEncoding == "":
+            raise Exception("文件编码未读取成功")
+        fileLength = FileLength(self.fileEncoding)
+        self.file_length = fileLength(sourceFilePath)
         self.start_time = time.time()
 
-    @classmethod
-    def read_source_file(cls):
-        with open(sourceFilePath, 'r', encoding="utf-8") as f:
+    def read_source_file(self):
+        with open(sourceFilePath, 'r', encoding=self.fileEncoding) as f:
             while True:
                 line = f.readline()
                 if not line:
                     break
                 yield line
+
+    @staticmethod
+    def charDetect(file):
+        with open(file, "rb") as f:
+            data = f.read()
+            return chardet.detect(data)["encoding"]
 
     def write_to_word(self):
         paragraph = self.document.add_paragraph()  # 添加段落
@@ -58,7 +67,7 @@ class WordHandler(object):
                         pass
                 percentage = length * 100 / self.file_length
                 print('\r' + '[完成进度]: %s%.2f%%' % ('+' * int(percentage),
-                                                   float(percentage)), end='')
+                                                       float(percentage)), end='')
 
             except StopIteration:
                 break
@@ -84,4 +93,3 @@ class WordHandler(object):
 
 if __name__ == '__main__':
     WordHandler().main()
-

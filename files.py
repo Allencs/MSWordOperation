@@ -1,6 +1,5 @@
 
-
-sourceFilePath = "C:\\Users\\chensheng\\Downloads\\85.txt"
-destFilePath = "C:\\Users\\chensheng\\Downloads\\tcxs-2.docx"
+sourceFilePath = "/Users/chensheng/Desktop/黄泉引路人之断龙台.txt"
+destFilePath = "黄泉引路人之断龙台.docx"
 
 
