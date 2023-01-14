@@ -5,7 +5,6 @@ from docx.shared import Pt
 from docx.oxml.ns import qn
 from files import destFilePath, sourceFilePath
 from file_length import FileLength
-import chardet
 
 
 class WordHandler(object):
@@ -23,11 +22,9 @@ class WordHandler(object):
     document.styles['Normal'].paragraph_format.line_spacing = 1.5
 
     def __init__(self):
-        self.fileEncoding = self.charDetect(sourceFilePath)
-        if self.fileEncoding == "":
-            raise Exception("文件编码未读取成功")
-        fileLength = FileLength(self.fileEncoding)
+        fileLength = FileLength()
         self.file_length = fileLength(sourceFilePath)
+        self.fileEncoding = fileLength.fileEncoding
         self.start_time = time.time()
 
     def read_source_file(self):
@@ -37,12 +34,6 @@ class WordHandler(object):
                 if not line:
                     break
                 yield line
-
-    @staticmethod
-    def charDetect(file):
-        with open(file, "rb") as f:
-            data = f.read()
-            return chardet.detect(data)["encoding"]
 
     def write_to_word(self):
         paragraph = self.document.add_paragraph()  # 添加段落
