@@ -1,5 +1,5 @@
 
-sourceFilePath = "/Users/chensheng/Desktop/史上第一祖师爷.txt"
-destFilePath = "史上第一祖师爷.docx"
+sourceFilePath = "独步逍遥.txt"
+destFilePath = "C:\\Users\\chensheng\\Downloads\\dbxy.docx"
 
 

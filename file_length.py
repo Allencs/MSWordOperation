@@ -26,4 +26,3 @@ class FileLength(object):
 class FileEncoding(object):
     UTF_8 = "utf-8"
     GB18030 = "gb18030"
-
